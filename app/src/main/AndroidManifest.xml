@@ -23,6 +23,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+        <activity android:name=".CreateIssueActivity" />
+        <activity android:name=".IssueListActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".AdminActivity" />
     </application>
 
 </manifest>
