@@ -2,48 +2,73 @@ package com.example.trabalho
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+
+    /* ---------- Firebase ---------- */
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val db   by lazy { FirebaseFirestore.getInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnProfile = findViewById<Button>(R.id.btnProfile)
-        val btnIssues = findViewById<Button>(R.id.btnIssues)
-        val btnCreateIssue = findViewById<Button>(R.id.btnCreateIssue)
-        val btnMessages = findViewById<Button>(R.id.btnMessages)
+        /* ---------- 1.   CONFIGURAR ÍCONE + TEXTO DE CADA BOTÃO ---------- */
+        listOf(
+            R.id.btnCreateIssue,
+            R.id.btnIssues,
+            R.id.btnHistory,
+            R.id.btnMessages
+        ).forEach { configHomeButton(it) }
 
-        btnProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+        /* ---------- 2.   NAVEGAÇÃO ---------- */
+        findViewById<View>(R.id.btnCreateIssue).setOnClickListener {
+            startActivity(Intent(this, CreateIssueActivity::class.java))
         }
-        btnIssues.setOnClickListener {
-            val intent = Intent(this, IssueListActivity::class.java)
-            startActivity(intent)
+        findViewById<View>(R.id.btnIssues).setOnClickListener {
+            startActivity(Intent(this, IssueListActivity::class.java))
         }
-        btnCreateIssue.setOnClickListener {
-            val intent = Intent(this, CreateIssueActivity::class.java)
-            startActivity(intent)
-        }
-        btnMessages.setOnClickListener {
-            // TODO: Start MessagesActivity
+        findViewById<View>(R.id.btnMessages).setOnClickListener {
+            /* TODO abrir MessagesActivity */
         }
 
-        val userId = auth.currentUser?.uid ?: return
-        db.collection("users").document(userId).get().addOnSuccessListener { doc ->
-            val role = doc.getString("role") ?: ""
-            if (role == "gestor") {
-                val intent = Intent(this, AdminActivity::class.java)
-                startActivity(intent)
-                finish()
+        /* ---------- 3.   SAUDAR e REDIRECIONAR SE FOR GESTOR ---------- */
+        auth.currentUser?.uid?.let { uid ->
+            db.collection("users").document(uid).get().addOnSuccessListener { snap ->
+                val nome = snap.getString("name").orEmpty()
+                val role = snap.getString("role").orEmpty()
+
+                findViewById<TextView>(R.id.txtBemVindo)?.text = "Bem vindo/a\n$nome"
+
+                if (role == "gestor") {
+                    startActivity(Intent(this, AdminActivity::class.java))
+                    finish()
+                }
             }
         }
+    }
+
+    /**
+     * Lê a tag do include (formato "Texto|@drawable/icone") e aplica nos views
+     * `txtLabel` e `imgIcon` que existem dentro de item_home_button.xml.
+     */
+    private fun configHomeButton(viewId: Int) {
+        val root = findViewById<View>(viewId) ?: return         // ConstraintLayout
+        val tagParts = root.tag?.toString()?.split("|") ?: return
+        if (tagParts.size < 2) return
+
+        val (label, drawablePath) = tagParts
+        val drawableName = drawablePath.removePrefix("@drawable/")
+
+        root.findViewById<TextView>(R.id.txtLabel)?.text = label
+        root.findViewById<ImageView>(R.id.imgIcon)?.setImageResource(
+            resources.getIdentifier(drawableName, "drawable", packageName)
+        )
     }
 }
