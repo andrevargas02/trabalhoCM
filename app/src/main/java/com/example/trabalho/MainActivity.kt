@@ -59,15 +59,30 @@ class MainActivity : AppCompatActivity() {
      * `txtLabel` e `imgIcon` que existem dentro de item_home_button.xml.
      */
     private fun configHomeButton(viewId: Int) {
-        val root = findViewById<View>(viewId) ?: return         // ConstraintLayout
-        val tagParts = root.tag?.toString()?.split("|") ?: return
-        if (tagParts.size < 2) return
+        val root = findViewById<View>(viewId)
+        if (root == null) {
+            android.util.Log.e("CONFIG", "View $viewId não encontrada")
+            return
+        }
+
+        android.util.Log.d("CONFIG", "Configurando botão com tag: ${root.tag}")
+
+        val tagParts = root.tag?.toString()?.split("|")
+        if (tagParts == null || tagParts.size < 2) {
+            android.util.Log.e("CONFIG", "Tag inválida: ${root.tag}")
+            return
+        }
 
         val (label, drawablePath) = tagParts
         val drawableName = drawablePath.removePrefix("@drawable/")
 
-        root.findViewById<TextView>(R.id.txtLabel)?.text = label
-        root.findViewById<ImageView>(R.id.imgIcon)?.setImageResource(
+        val txtLabel = root.findViewById<TextView>(R.id.txtLabel)
+        val imgIcon = root.findViewById<ImageView>(R.id.imgIcon)
+
+        android.util.Log.d("CONFIG", "Aplicando texto: $label e ícone: $drawableName")
+
+        txtLabel?.text = label
+        imgIcon?.setImageResource(
             resources.getIdentifier(drawableName, "drawable", packageName)
         )
     }

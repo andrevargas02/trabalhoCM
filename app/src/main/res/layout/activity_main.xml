@@ -50,28 +50,39 @@
         android:layout_gravity="center"
         android:layout_marginTop="8dp" />
 
-    <!-- 4 botões -->
-    <include
+    <FrameLayout
         android:id="@+id/btnCreateIssue"
-        layout="@layout/item_home_button"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_marginTop="32dp"
-        android:tag="Nova avaria|@drawable/exclamation" />
+        android:tag="Nova avaria|@drawable/exclamation">
+        <include layout="@layout/item_home_button" />
+    </FrameLayout>
 
-    <include
+    <FrameLayout
         android:id="@+id/btnIssues"
-        layout="@layout/item_home_button"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_marginTop="24dp"
-        android:tag="Avarias Ativas|@drawable/eye" />
+        android:tag="Avarias Ativas|@drawable/eye">
+        <include layout="@layout/item_home_button" />
+    </FrameLayout>
 
-    <include
+    <FrameLayout
         android:id="@+id/btnHistory"
-        layout="@layout/item_home_button"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_marginTop="24dp"
-        android:tag="Histórico de avarias|@drawable/history1" />
+        android:tag="Histórico de avarias|@drawable/history1">
+        <include layout="@layout/item_home_button" />
+    </FrameLayout>
 
-    <include
+    <FrameLayout
         android:id="@+id/btnMessages"
-        layout="@layout/item_home_button"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_marginTop="24dp"
-        android:tag="Lista de mensagens|@drawable/history2" />
+        android:tag="Lista de mensagens|@drawable/history2">
+        <include layout="@layout/item_home_button" />
+    </FrameLayout>
 </LinearLayout>
