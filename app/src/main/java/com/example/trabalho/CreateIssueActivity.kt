@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
+import androidx.appcompat.app.AlertDialog
+import com.example.trabalho.IssueListActivity
 
 class CreateIssueActivity : AppCompatActivity() {
 
@@ -44,6 +46,11 @@ class CreateIssueActivity : AppCompatActivity() {
             startActivityForResult(Intent.createChooser(intent, "Selecionar imagem"), PICK_IMAGE)
         }
 
+        val inputLocation = findViewById<EditText>(R.id.inputLocation)
+        inputLocation.setOnClickListener {
+            showLocationDialog()
+        }
+
         // Submeter
         findViewById<Button>(R.id.btnSubmitIssue).setOnClickListener {
             val desc = findViewById<EditText>(R.id.inputDescription).text.toString()
@@ -63,6 +70,34 @@ class CreateIssueActivity : AppCompatActivity() {
                 uploadImageThenSave(desc, urg, loc)
             }
         }
+    }
+
+    private fun showLocationDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_location, null)
+
+        val spinnerInstitution = dialogView.findViewById<Spinner>(R.id.spinnerInstitution)
+        val spinnerLocation = dialogView.findViewById<Spinner>(R.id.spinnerLocation)
+        val editRoom = dialogView.findViewById<EditText>(R.id.editRoom)
+
+        val institutions = listOf("ESTG", "ESS", "ESE")
+        val locations = listOf("Biblioteca", "Laboratório", "Sala de Aula")
+
+        spinnerInstitution.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, institutions)
+        spinnerLocation.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, locations)
+
+        AlertDialog.Builder(this)
+            .setTitle("Selecionar Localização")
+            .setView(dialogView)
+            .setPositiveButton("Confirmar") { _, _ ->
+                val institution = spinnerInstitution.selectedItem.toString()
+                val location = spinnerLocation.selectedItem.toString()
+                val room = editRoom.text.toString()
+
+                val result = "$institution - $location - $room"
+                findViewById<EditText>(R.id.inputLocation).setText(result)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     private fun uploadImageThenSave(desc: String, urg: String, loc: String) {
@@ -95,6 +130,9 @@ class CreateIssueActivity : AppCompatActivity() {
         db.collection("issues").add(issue)
             .addOnSuccessListener {
                 Toast.makeText(this, "Avaria submetida!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, IssueListActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 finish()
             }
             .addOnFailureListener {

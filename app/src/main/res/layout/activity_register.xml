@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="#FFFFFF">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FixIt"
+            android:text="@string/app_name"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="#6D0075"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Registar Cliente"
+            android:text="@string/register_title"
             android:textSize="18sp"
             android:layout_marginBottom="16dp" />
 
@@ -31,7 +31,7 @@
             android:id="@+id/inputName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introduza o seu nome"
+            android:hint="@string/name_hint"
             android:inputType="textPersonName"
             android:layout_marginBottom="12dp" />
 
@@ -39,7 +39,7 @@
             android:id="@+id/inputPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introduza o seu número de telemóvel"
+            android:hint="@string/phone_hint"
             android:inputType="phone"
             android:layout_marginBottom="12dp" />
 
@@ -47,7 +47,7 @@
             android:id="@+id/inputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introduza o seu endereço de email"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
             android:layout_marginBottom="12dp" />
 
@@ -55,7 +55,7 @@
             android:id="@+id/inputNif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introduza o seu NIF"
+            android:hint="@string/nif_hint"
             android:inputType="number"
             android:layout_marginBottom="12dp" />
 
@@ -63,7 +63,7 @@
             android:id="@+id/inputPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introduza a palavra-passe"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
             android:layout_marginBottom="12dp" />
 
@@ -71,7 +71,7 @@
             android:id="@+id/inputConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introduza novamente a palavra-passe"
+            android:hint="@string/confirm_password_hint"
             android:inputType="textPassword"
             android:layout_marginBottom="24dp" />
 
@@ -79,7 +79,7 @@
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Registar"
+            android:text="@string/register_button"
             android:backgroundTint="#000000"
             android:textColor="#FFFFFF" />
     </LinearLayout>

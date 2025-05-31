@@ -1,3 +1,62 @@
 <resources>
     <string name="app_name">trabalho</string>
+
+    <!-- Autenticação -->
+    <string name="register_title">Registar Cliente</string>
+    <string name="login_title">Iniciar Sessão</string>
+    <string name="name_hint">Introduza o seu nome</string>
+    <string name="phone_hint">Introduza o seu número de telefone</string>
+    <string name="email_hint">Introduza o seu endereço de email</string>
+    <string name="nif_hint">Introduza o seu NIF</string>
+    <string name="password_hint">Introduza a palavra-passe</string>
+    <string name="confirm_password_hint">Introduza novamente a palavra-passe</string>
+    <string name="register_button">Registar</string>
+    <string name="login_button">Iniciar sessão</string>
+    <string name="show_password">Mostrar palavra-passe</string>
+    <string name="login_google">Continuar com Google</string>
+    <string name="login_apple">Continuar com Apple</string>
+    <string name="no_account">Ainda não tens conta? Regista-te!</string>
+
+    <!-- Navegação -->
+    <string name="home_title">Página principal</string>
+    <string name="notifications">Notificações</string>
+    <string name="chats">Chats</string>
+    <string name="logout">Sair</string>
+
+    <!-- Página Inicial -->
+    <string name="welcome">Bem vindo/a</string>
+    <string name="new_fault">Nova avaria</string>
+    <string name="active_faults">Avarias Ativas</string>
+    <string name="fault_history">Histórico de avarias</string>
+    <string name="message_list">Lista de mensagens</string>
+
+    <!-- Perfil -->
+    <string name="profile">Perfil</string>
+
+    <!-- Avarias -->
+    <string name="report_fault">Apresentar avaria</string>
+    <string name="fault_description">Descrição da avaria</string>
+    <string name="fault_location">Localização da avaria</string>
+    <string name="fault_urgency">Urgência da avaria</string>
+    <string name="attachment">Anexo (opcional)</string>
+    <string name="send_fault">Enviar Avaria</string>
+    <string name="fault_status">Estado</string>
+    <string name="fault_resolved">Solucionado</string>
+    <string name="fault_open">Aberto</string>
+    <string name="assigned_technician">Técnico Associado</string>
+
+    <!-- Localização -->
+    <string name="institution">Instituição</string>
+    <string name="location">Local</string>
+    <string name="additional_info">Informação Adicional (Sala, local)</string>
+
+    <!-- Gestor -->
+    <string name="manager_dashboard">Gestor Dashboard</string>
+    <string name="manage_technicians">Gerir Técnicos</string>
+    <string name="avg_resolution_time">Tempo Médio de Resolução</string>
+    <string name="resolved_faults">Avarias Resolvidas</string>
+
+    <!-- Técnico -->
+    <string name="technician_tasks_done">Tarefas Concluídas</string>
+    <string name="technician_avg_time">Tempo Médio</string>
 </resources>

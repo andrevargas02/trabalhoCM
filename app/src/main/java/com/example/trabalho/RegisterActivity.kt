@@ -1,5 +1,6 @@
 package com.example.trabalho
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -50,9 +51,9 @@ class RegisterActivity : AppCompatActivity() {
                         db.collection("users").document(uid).set(user)
                             .addOnSuccessListener {
                                 Toast.makeText(this, "Registo feito com sucesso!", Toast.LENGTH_SHORT).show()
-                                // Aqui podes ir para a main/home:
-                                // startActivity(Intent(this, MainActivity::class.java))
-                                // finish()
+                                val intent = Intent(this, LoginActivity::class.java)
+                                startActivity(intent)
+                                finish()
                             }
                             .addOnFailureListener {
                                 Toast.makeText(this, "Erro ao guardar dados", Toast.LENGTH_SHORT).show()
