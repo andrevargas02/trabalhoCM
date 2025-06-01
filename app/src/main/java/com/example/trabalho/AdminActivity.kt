@@ -14,11 +14,13 @@ class AdminActivity : AppCompatActivity() {
         val btnManageIssues = findViewById<Button>(R.id.btnManageIssues)
 
         btnManageEmployees.setOnClickListener {
-            // TODO: Start ManageEmployeesActivity
+            val intent = Intent(this, ManageEmployeesActivity::class.java)
+            startActivity(intent)
         }
 
+
         btnManageIssues.setOnClickListener {
-            val intent = Intent(this, IssueListActivity::class.java)
+            val intent = Intent(this, ManageIssuesActivity::class.java)
             startActivity(intent)
         }
     }

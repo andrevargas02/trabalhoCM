@@ -22,7 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ManageIssuesActivity" />
+        <activity android:name=".EditIssueActivity" />
+        <activity android:name=".RegisterEmployeeActivity" />
+        <activity android:name=".ManageEmployeesActivity" />
         <activity android:name=".CreateIssueActivity" />
         <activity android:name=".IssueListActivity" />
         <activity android:name=".ProfileActivity" />

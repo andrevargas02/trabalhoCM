@@ -1,4 +1,5 @@
 package com.example.trabalho.models
+import java.io.Serializable
 
 data class Issue(
     val description: String = "",
@@ -9,4 +10,4 @@ data class Issue(
     val createdBy: String = "",
     val technicianId: String = "",
     val location_id: String = ""
-)
+) : Serializable
