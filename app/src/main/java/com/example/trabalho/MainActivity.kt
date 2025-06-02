@@ -28,14 +28,19 @@ class MainActivity : AppCompatActivity() {
         ).forEach { configHomeButton(it) }
 
         /* ---------- 2.   NAVEGAÇÃO ---------- */
+        // Botão "Criar Avaria" → abre CreateIssueActivity
         findViewById<View>(R.id.btnCreateIssue).setOnClickListener {
             startActivity(Intent(this, CreateIssueActivity::class.java))
         }
+
+        // Botão "Avarias" → abre ActiveIssuesActivity para listar apenas as avarias ativas
         findViewById<View>(R.id.btnIssues).setOnClickListener {
-            startActivity(Intent(this, IssueListActivity::class.java))
+            startActivity(Intent(this, ActiveIssuesActivity::class.java))
         }
+
+        // Botão "Mensagens" (ainda sem implementação)
         findViewById<View>(R.id.btnMessages).setOnClickListener {
-            /* TODO abrir MessagesActivity */
+            // TODO abrir MessagesActivity
         }
 
         /* ---------- 3.   SAUDAR e REDIRECIONAR SE FOR GESTOR ---------- */
@@ -44,8 +49,10 @@ class MainActivity : AppCompatActivity() {
                 val nome = snap.getString("name").orEmpty()
                 val role = snap.getString("role").orEmpty()
 
+                // Exibe "Bem vindo/a\n<NOME>"
                 findViewById<TextView>(R.id.txtBemVindo)?.text = "Bem vindo/a\n$nome"
 
+                // Se for gestor, redireciona para AdminActivity
                 if (role == "gestor") {
                     startActivity(Intent(this, AdminActivity::class.java))
                     finish()
