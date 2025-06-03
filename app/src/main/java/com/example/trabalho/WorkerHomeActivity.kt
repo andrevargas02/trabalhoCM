@@ -46,9 +46,9 @@ class WorkerHomeActivity : AppCompatActivity() {
             startActivity(Intent(this, ActiveIssuesActivity::class.java))
         }
 
-        // “Histórico de avarias” → a implementar (exemplo)
+        // “Histórico de avarias” → abre WorkerIssueHistoryActivity
         findViewById<View>(R.id.btnHistoryWorker).setOnClickListener {
-            // startActivity(Intent(this, HistoryActivity::class.java))
+            startActivity(Intent(this, WorkerIssueHistoryActivity::class.java))
         }
 
         // “Lista de mensagens” → a implementar

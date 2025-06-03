@@ -29,6 +29,9 @@
         <!-- Home do Trabalhador (menu de botões) -->
         <activity android:name=".WorkerHomeActivity" />
 
+        <!-- Tela de Histórico de Avarias do Trabalhador -->
+        <activity android:name=".WorkerIssueHistoryActivity" />
+
         <!-- Tela de listar Avarias Pendentes -->
         <activity android:name=".PendingIssuesActivity" />
 
@@ -49,5 +52,4 @@
         <activity android:name=".ProfileActivity" />
 
     </application>
-
 </manifest>
