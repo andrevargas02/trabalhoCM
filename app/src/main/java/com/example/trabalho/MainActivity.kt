@@ -2,95 +2,63 @@ package com.example.trabalho
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
-    /* ---------- Firebase ---------- */
     private val auth by lazy { FirebaseAuth.getInstance() }
     private val db   by lazy { FirebaseFirestore.getInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // NOTE: O layout de MainActivity agora é apenas um container mínimo (ex.: um ProgressBar).
         setContentView(R.layout.activity_main)
 
-        /* ---------- 1.   CONFIGURAR ÍCONE + TEXTO DE CADA BOTÃO ---------- */
-        listOf(
-            R.id.btnCreateIssue,
-            R.id.btnIssues,
-            R.id.btnHistory,
-            R.id.btnMessages
-        ).forEach { configHomeButton(it) }
-
-        /* ---------- 2.   NAVEGAÇÃO ---------- */
-        // Botão "Criar Avaria" → abre CreateIssueActivity
-        findViewById<View>(R.id.btnCreateIssue).setOnClickListener {
-            startActivity(Intent(this, CreateIssueActivity::class.java))
+        // 1) Verifica se o usuário está logado
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            // Se não estiver logado, vai direto para LoginActivity
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
         }
 
-        // Botão "Avarias" → abre ActiveIssuesActivity para listar apenas as avarias ativas
-        findViewById<View>(R.id.btnIssues).setOnClickListener {
-            startActivity(Intent(this, ActiveIssuesActivity::class.java))
-        }
-
-        // Botão "Mensagens" (ainda sem implementação)
-        findViewById<View>(R.id.btnMessages).setOnClickListener {
-            // TODO abrir MessagesActivity
-        }
-
-        /* ---------- 3.   SAUDAR e REDIRECIONAR SE FOR GESTOR ---------- */
-        auth.currentUser?.uid?.let { uid ->
-            db.collection("users").document(uid).get().addOnSuccessListener { snap ->
-                val nome = snap.getString("name").orEmpty()
-                val role = snap.getString("role").orEmpty()
-
-                // Exibe "Bem vindo/a\n<NOME>"
-                findViewById<TextView>(R.id.txtBemVindo)?.text = "Bem vindo/a\n$nome"
-
-                // Se for gestor, redireciona para AdminActivity
+        // 2) Se estiver logado, verifica o role no Firestore
+        db.collection("users").document(currentUser.uid).get()
+            .addOnSuccessListener { snapshot ->
+                val role = snapshot.getString("role").orEmpty()
                 if (role == "gestor") {
+                    // Redireciona para tela de gestor
                     startActivity(Intent(this, AdminActivity::class.java))
+                    finish()
+                } else if (role == "trabalhador") {
+                    // Redireciona para o menu do trabalhador
+                    startActivity(Intent(this, WorkerHomeActivity::class.java))
+                    finish()
+                } else {
+                    // Role inválido ou não definido → força logout e volta para login
+                    Toast.makeText(
+                        this,
+                        "Role inválido. Efetue logout e tente novamente.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    auth.signOut()
+                    startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                 }
             }
-        }
-    }
-
-    /**
-     * Lê a tag do include (formato "Texto|@drawable/icone") e aplica nos views
-     * `txtLabel` e `imgIcon` que existem dentro de item_home_button.xml.
-     */
-    private fun configHomeButton(viewId: Int) {
-        val root = findViewById<View>(viewId)
-        if (root == null) {
-            android.util.Log.e("CONFIG", "View $viewId não encontrada")
-            return
-        }
-
-        android.util.Log.d("CONFIG", "Configurando botão com tag: ${root.tag}")
-
-        val tagParts = root.tag?.toString()?.split("|")
-        if (tagParts == null || tagParts.size < 2) {
-            android.util.Log.e("CONFIG", "Tag inválida: ${root.tag}")
-            return
-        }
-
-        val (label, drawablePath) = tagParts
-        val drawableName = drawablePath.removePrefix("@drawable/")
-
-        val txtLabel = root.findViewById<TextView>(R.id.txtLabel)
-        val imgIcon = root.findViewById<ImageView>(R.id.imgIcon)
-
-        android.util.Log.d("CONFIG", "Aplicando texto: $label e ícone: $drawableName")
-
-        txtLabel?.text = label
-        imgIcon?.setImageResource(
-            resources.getIdentifier(drawableName, "drawable", packageName)
-        )
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    "Erro ao carregar dados do usuário: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                auth.signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
     }
 }
