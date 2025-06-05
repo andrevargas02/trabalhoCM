@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
                     // Redireciona para o menu do trabalhador
                     startActivity(Intent(this, WorkerHomeActivity::class.java))
                     finish()
+                } else if (role == "client") {
+                    startActivity(Intent(this, UserHomeActivity::class.java))
+                    finish()
                 } else {
                     // Role inválido ou não definido → força logout e volta para login
                     Toast.makeText(

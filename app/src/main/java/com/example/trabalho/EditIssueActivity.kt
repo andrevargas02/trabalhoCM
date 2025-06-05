@@ -1,10 +1,14 @@
 package com.example.trabalho
 
+
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.trabalho.models.Issue
+import com.example.trabalho.models.StatusUpdate
+import com.example.trabalho.models.Notification
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class EditIssueActivity : AppCompatActivity() {
@@ -12,6 +16,7 @@ class EditIssueActivity : AppCompatActivity() {
     private lateinit var issueId: String
     private lateinit var issue: Issue
     private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +42,14 @@ class EditIssueActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnAttach).visibility = Button.GONE
 
         // Submeter alterações
-        findViewById<Button>(R.id.btnSubmitIssue).text = "Atualizar Avaria"
-        findViewById<Button>(R.id.btnSubmitIssue).setOnClickListener {
+        val btnSubmit = findViewById<Button>(R.id.btnSubmitIssue)
+        btnSubmit.text = "Atualizar Avaria"
+        btnSubmit.setOnClickListener {
             val updatedIssue = issue.copy(
                 description = findViewById<EditText>(R.id.inputDescription).text.toString(),
                 urgency = spinner.selectedItem.toString(),
                 location_id = findViewById<EditText>(R.id.inputLocation).text.toString()
             )
-
             showEditDialog(updatedIssue)
         }
     }
@@ -65,7 +70,7 @@ class EditIssueActivity : AppCompatActivity() {
         val technicianIds = mutableListOf<String>()
 
         // Carregar técnicos do Firestore
-        FirebaseFirestore.getInstance().collection("users")
+        db.collection("users")
             .whereEqualTo("role", "trabalhador")
             .get()
             .addOnSuccessListener { result ->
@@ -85,13 +90,39 @@ class EditIssueActivity : AppCompatActivity() {
                     .setTitle("Atualizar Estado e Técnico")
                     .setView(layout)
                     .setPositiveButton("Salvar") { _, _ ->
+                        val newStatus = statusSpinner.selectedItem.toString()
+                        val technicianID = technicianIds[techSpinner.selectedItemPosition]
                         val finalIssue = updatedIssue.copy(
-                            status = statusSpinner.selectedItem.toString(),
-                            technicianId = technicianIds[techSpinner.selectedItemPosition]
+                            status = newStatus,
+                            technicianId = technicianID
                         )
 
-                        FirebaseFirestore.getInstance().collection("issues").document(issueId).set(finalIssue)
+                        db.collection("issues").document(issueId).set(finalIssue)
                             .addOnSuccessListener {
+                                // 🔁 Guardar StatusUpdate
+                                val statusUpdate = StatusUpdate(
+                                    statusID = db.collection("status_updates").document().id,
+                                    status = newStatus,
+                                    timestamp = System.currentTimeMillis(),
+                                    issueID = issueId,
+                                    updatedBy = auth.currentUser?.uid ?: "desconhecido"
+                                )
+                                db.collection("status_updates")
+                                    .document(statusUpdate.statusID)
+                                    .set(statusUpdate)
+
+                                // 🔔 Guardar Notification
+                                val notification = Notification(
+                                    notificationID = db.collection("notifications").document().id,
+                                    message = "O estado da sua avaria foi atualizado para \"$newStatus\".",
+                                    timestamp = System.currentTimeMillis(),
+                                    userID = issue.createdBy,
+                                    issueID = issueId
+                                )
+                                db.collection("notifications")
+                                    .document(notification.notificationID)
+                                    .set(notification)
+
                                 Toast.makeText(this, "Avaria atualizada com sucesso", Toast.LENGTH_SHORT).show()
                                 finish()
                             }

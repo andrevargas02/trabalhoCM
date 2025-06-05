@@ -50,6 +50,7 @@
         <activity android:name=".CreateIssueActivity" />
         <activity android:name=".IssueListActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".UserHomeActivity" />
 
     </application>
 </manifest>

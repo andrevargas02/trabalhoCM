@@ -22,6 +22,8 @@
     <string name="notifications">Notificações</string>
     <string name="chats">Chats</string>
     <string name="logout">Sair</string>
+    <string name="navigation_drawer_open">Abrir menu</string>
+    <string name="navigation_drawer_close">Fechar menu</string>
 
     <!-- Página Inicial -->
     <string name="welcome">Bem vindo/a</string>
