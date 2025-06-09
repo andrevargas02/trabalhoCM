@@ -42,6 +42,7 @@
         <activity android:name=".AdminActivity" />
 
         <!-- Estas Activities já existentes -->
+        <activity android:name=".NotificationsActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ManageIssuesActivity" />
         <activity android:name=".EditIssueActivity" />

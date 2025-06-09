@@ -94,7 +94,8 @@ class EditIssueActivity : AppCompatActivity() {
                         val technicianID = technicianIds[techSpinner.selectedItemPosition]
                         val finalIssue = updatedIssue.copy(
                             status = newStatus,
-                            technicianId = technicianID
+                            technicianId = technicianID,
+                            createdBy = issue.createdBy
                         )
 
                         db.collection("issues").document(issueId).set(finalIssue)
