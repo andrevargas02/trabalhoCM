@@ -73,6 +73,9 @@ class UserHomeActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnIssues).setOnClickListener {
             startActivity(Intent(this, ActiveIssuesActivity::class.java))
         }
+        findViewById<View>(R.id.btnHistory).setOnClickListener {
+            startActivity(Intent(this, WorkerIssueHistoryActivity::class.java))
+        }
         findViewById<View>(R.id.btnMessages).setOnClickListener {
             // TODO: abrir MessagesActivity
         }

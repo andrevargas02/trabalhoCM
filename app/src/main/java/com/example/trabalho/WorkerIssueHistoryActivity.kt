@@ -21,13 +21,11 @@ class WorkerIssueHistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_issue_history)
 
-        // 1) Configura RecyclerView + Adapter
         recyclerView = findViewById(R.id.recyclerViewIssueHistory)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = IssueAdapter(issueHistoryList)
         recyclerView.adapter = adapter
 
-        // 2) Carrega todas as avarias onde technicianId == UID do usuário logado
         loadIssueHistory()
     }
 
@@ -38,28 +36,39 @@ class WorkerIssueHistoryActivity : AppCompatActivity() {
             return
         }
 
-        db.collection("issues")
-            .whereEqualTo("technicianId", uid)
-            .get()
-            .addOnSuccessListener { result ->
-                issueHistoryList.clear()
-                for (doc in result) {
-                    val issue = doc.toObject(Issue::class.java)
-                    issueHistoryList.add(issue)
-                }
-                adapter.notifyDataSetChanged()
-                Toast.makeText(
-                    this,
-                    "Foram encontradas ${issueHistoryList.size} avarias.",
-                    Toast.LENGTH_SHORT
-                ).show()
+        // Obter o papel (role) do utilizador
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                val role = document.getString("role") ?: "cliente"
+                val queryField = if (role == "trabalhador") "technicianId" else "createdBy"
+
+                db.collection("issues")
+                    .whereEqualTo(queryField, uid)
+                    .get()
+                    .addOnSuccessListener { result ->
+                        issueHistoryList.clear()
+                        for (doc in result) {
+                            val issue = doc.toObject(Issue::class.java)
+                            issueHistoryList.add(issue)
+                        }
+                        adapter.notifyDataSetChanged()
+                        Toast.makeText(
+                            this,
+                            "Foram encontradas ${issueHistoryList.size} avarias.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            this,
+                            "Erro ao carregar histórico: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "Erro ao carregar histórico: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+            .addOnFailureListener {
+                Toast.makeText(this, "Erro ao obter papel do utilizador", Toast.LENGTH_SHORT).show()
             }
     }
 }

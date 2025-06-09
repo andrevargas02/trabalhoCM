@@ -22,7 +22,7 @@ class WorkerHomeActivity : AppCompatActivity() {
         auth.currentUser?.uid?.let { uid ->
             db.collection("users").document(uid).get().addOnSuccessListener { snap ->
                 val nome = snap.getString("name").orEmpty()
-                findViewById<TextView>(R.id.txtBemVindoWorker)?.text = "Bem vindo/a\n$nome"
+                findViewById<TextView>(R.id.txtBemVindo)?.text = "Bem vindo/a\n$nome"
             }
         }
 
