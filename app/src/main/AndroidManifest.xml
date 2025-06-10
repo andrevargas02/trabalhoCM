@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Trabalho"
         tools:targetApi="31">
 
-        <!-- Tela de Login (Launcher) -->
+        <!-- Login (Launcher) -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -23,26 +23,29 @@
             </intent-filter>
         </activity>
 
-        <!-- Fluxo pós-login -->
+        <!-- Roteador pós-login -->
         <activity android:name=".MainActivity" />
 
-        <!-- Home do Trabalhador (menu de botões) -->
+        <!-- Home do Trabalhador -->
         <activity android:name=".WorkerHomeActivity" />
 
-        <!-- Tela de Histórico de Avarias do Trabalhador -->
+        <!-- Histórico de Avarias do Trabalhador -->
         <activity android:name=".WorkerIssueHistoryActivity" />
 
-        <!-- Tela de listar Avarias Pendentes -->
+        <!-- Avarias Pendentes -->
         <activity android:name=".PendingIssuesActivity" />
 
-        <!-- Tela de listar Avarias Ativas -->
+        <!-- Avarias Ativas -->
         <activity android:name=".ActiveIssuesActivity" />
+
+        <!-- Chat -->
+        <activity android:name=".ChatListActivity" />
+        <activity android:name=".ChatActivity" />
 
         <!-- Gestor/Admin -->
         <activity android:name=".AdminActivity" />
 
-        <!-- Estas Activities já existentes -->
-        <activity android:name=".NotificationsActivity" />
+        <!-- Outras já existentes -->
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ManageIssuesActivity" />
         <activity android:name=".EditIssueActivity" />
@@ -51,7 +54,7 @@
         <activity android:name=".CreateIssueActivity" />
         <activity android:name=".IssueListActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".UserHomeActivity" />
 
     </application>
+
 </manifest>

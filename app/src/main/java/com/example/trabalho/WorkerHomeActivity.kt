@@ -18,15 +18,16 @@ class WorkerHomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_home)
 
-        // 1) Preenche o nome do trabalhador no TextView de boas-vindas
+        // 1) Saudação: usa R.id.txtBemVindo conforme seu XML atual
         auth.currentUser?.uid?.let { uid ->
             db.collection("users").document(uid).get().addOnSuccessListener { snap ->
                 val nome = snap.getString("name").orEmpty()
-                findViewById<TextView>(R.id.txtBemVindo)?.text = "Bem vindo/a\n$nome"
+                findViewById<TextView>(R.id.txtBemVindo)
+                    .text = "Bem vindo/a\n$nome"
             }
         }
 
-        // 2) Configura cada botão para ajustar texto e ícone via tag
+        // 2) Ajusta botões via tag
         listOf(
             R.id.btnPendingIssues,
             R.id.btnActiveIssues,
@@ -34,48 +35,31 @@ class WorkerHomeActivity : AppCompatActivity() {
             R.id.btnMessagesWorker
         ).forEach { configHomeButton(it) }
 
-        // 3) Navegações:
-
-        // “Avarias Pendentes” → abre PendingIssuesActivity
+        // 3) Navegações
         findViewById<View>(R.id.btnPendingIssues).setOnClickListener {
             startActivity(Intent(this, PendingIssuesActivity::class.java))
         }
-
-        // “Avarias Ativas” → abre ActiveIssuesActivity
         findViewById<View>(R.id.btnActiveIssues).setOnClickListener {
             startActivity(Intent(this, ActiveIssuesActivity::class.java))
         }
-
-        // “Histórico de avarias” → abre WorkerIssueHistoryActivity
         findViewById<View>(R.id.btnHistoryWorker).setOnClickListener {
             startActivity(Intent(this, WorkerIssueHistoryActivity::class.java))
         }
-
-        // “Lista de mensagens” → a implementar
         findViewById<View>(R.id.btnMessagesWorker).setOnClickListener {
-            // startActivity(Intent(this, MessagesActivity::class.java))
+            startActivity(Intent(this, ChatListActivity::class.java))
         }
     }
 
-    /**
-     * Lê a tag do include (formato "Texto|@drawable/icone") e aplica nos views
-     * txtLabel e imgIcon que existem dentro de item_home_button.xml.
-     */
     private fun configHomeButton(viewId: Int) {
         val root = findViewById<View>(viewId) ?: return
+        val parts = root.tag?.toString()?.split("|") ?: return
+        if (parts.size < 2) return
 
-        val tagParts = root.tag?.toString()?.split("|") ?: return
-        if (tagParts.size < 2) return
+        val (label, iconTag) = parts
+        val iconName = iconTag.removePrefix("@drawable/")
 
-        val (label, drawablePath) = tagParts
-        val drawableName = drawablePath.removePrefix("@drawable/")
-
-        val txtLabel = root.findViewById<TextView>(R.id.txtLabel)
-        val imgIcon  = root.findViewById<ImageView>(R.id.imgIcon)
-
-        txtLabel?.text = label
-        imgIcon?.setImageResource(
-            resources.getIdentifier(drawableName, "drawable", packageName)
-        )
+        root.findViewById<TextView>(R.id.txtLabel)?.text = label
+        root.findViewById<ImageView>(R.id.imgIcon)
+            ?.setImageResource(resources.getIdentifier(iconName, "drawable", packageName))
     }
 }
