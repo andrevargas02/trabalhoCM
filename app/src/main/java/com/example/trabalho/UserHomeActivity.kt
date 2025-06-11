@@ -31,12 +31,10 @@ class UserHomeActivity : AppCompatActivity() {
         navView = findViewById(R.id.navView)
         menuIcon = findViewById(R.id.imgMenu)
 
-        // Abrir o menu ao clicar no ícone
         menuIcon.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        // Sidebar (Navigation Drawer) listener
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_home -> {
@@ -46,6 +44,11 @@ class UserHomeActivity : AppCompatActivity() {
                 R.id.nav_notifications -> {
                     startActivity(Intent(this, NotificationsActivity::class.java))
                     finish()
+                    true
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    drawerLayout.closeDrawers()
                     true
                 }
                 R.id.nav_logout -> {
@@ -58,7 +61,6 @@ class UserHomeActivity : AppCompatActivity() {
             }
         }
 
-        // Configurações dos botões principais
         listOf(
             R.id.btnCreateIssue,
             R.id.btnIssues,
@@ -66,7 +68,6 @@ class UserHomeActivity : AppCompatActivity() {
             R.id.btnMessages
         ).forEach { configHomeButton(it) }
 
-        // Navegação
         findViewById<View>(R.id.btnCreateIssue).setOnClickListener {
             startActivity(Intent(this, CreateIssueActivity::class.java))
         }
@@ -80,7 +81,6 @@ class UserHomeActivity : AppCompatActivity() {
             startActivity(Intent(this, ChatListActivity::class.java))
         }
 
-        // Saudação
         auth.currentUser?.uid?.let { uid ->
             db.collection("users").document(uid).get().addOnSuccessListener { snap ->
                 val nome = snap.getString("name").orEmpty()
@@ -93,7 +93,6 @@ class UserHomeActivity : AppCompatActivity() {
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
     }
 
     private fun configHomeButton(viewId: Int) {

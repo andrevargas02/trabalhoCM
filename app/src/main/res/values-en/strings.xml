@@ -22,7 +22,7 @@
     <string name="show_password">Show password</string>
     <string name="login_google">Continue with Google</string>
     <string name="login_apple">Continue with Apple</string>
-    <string name="no_account">Don't have an account? Sign up!</string>
+    <string name="no_account">Dont have an account? Sign up!</string>
 
     <string name="home_title">Home</string>
     <string name="welcome">Welcome</string>

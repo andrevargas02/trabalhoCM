@@ -5,20 +5,61 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class WorkerHomeActivity : AppCompatActivity() {
 
     private val auth by lazy { FirebaseAuth.getInstance() }
-    private val db   by lazy { FirebaseFirestore.getInstance() }
+    private val db = FirebaseFirestore.getInstance()
+
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var menuIcon: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_home)
 
-        // 1) Saudação: usa R.id.txtBemVindo conforme seu XML atual
+        drawerLayout = findViewById(R.id.drawerLayout)
+        navView = findViewById(R.id.navView)
+        menuIcon = findViewById(R.id.imgMenu)
+
+        menuIcon.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        navView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    drawerLayout.closeDrawers()
+                    true
+                }
+                R.id.nav_notifications -> {
+                    startActivity(Intent(this, NotificationsActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    drawerLayout.closeDrawers()
+                    true
+                }
+                R.id.nav_logout -> {
+                    FirebaseAuth.getInstance().signOut()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
+
         auth.currentUser?.uid?.let { uid ->
             db.collection("users").document(uid).get().addOnSuccessListener { snap ->
                 val nome = snap.getString("name").orEmpty()
@@ -27,7 +68,6 @@ class WorkerHomeActivity : AppCompatActivity() {
             }
         }
 
-        // 2) Ajusta botões via tag
         listOf(
             R.id.btnPendingIssues,
             R.id.btnActiveIssues,
@@ -35,7 +75,6 @@ class WorkerHomeActivity : AppCompatActivity() {
             R.id.btnMessagesWorker
         ).forEach { configHomeButton(it) }
 
-        // 3) Navegações
         findViewById<View>(R.id.btnPendingIssues).setOnClickListener {
             startActivity(Intent(this, PendingIssuesActivity::class.java))
         }
@@ -48,6 +87,12 @@ class WorkerHomeActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnMessagesWorker).setOnClickListener {
             startActivity(Intent(this, ChatListActivity::class.java))
         }
+
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
     }
 
     private fun configHomeButton(viewId: Int) {
