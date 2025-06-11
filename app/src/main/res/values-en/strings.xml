@@ -1,0 +1,69 @@
+<resources>
+    
+    <string name="app_name">Fixit</string>
+    <string name="fixit">FixIt</string>
+
+    <string name="btn_back">Back</string>
+    <string name="btn_register">Register</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_attach">Attach</string>
+    <string name="btn_send_fault">Send Issue</string>
+
+    <string name="register_button">Register</string>
+    <string name="send_fault">Send Issue</string>
+    <string name="register_title">Register Client</string>
+    <string name="login_title">Login</string>
+    <string name="name_hint">Name</string>
+    <string name="phone_hint">Phone</string>
+    <string name="email_hint">Email</string>
+    <string name="nif_hint">NIF</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="show_password">Show password</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="login_apple">Continue with Apple</string>
+    <string name="no_account">Don't have an account? Sign up!</string>
+
+    <string name="home_title">Home</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcome_named">Welcome\nAna Pereira</string>
+
+    <string name="notifications">Notifications</string>
+    <string name="chats">Chats</string>
+    <string name="logout">Logout</string>
+    <string name="navigation_drawer_open">Open menu</string>
+    <string name="navigation_drawer_close">Close menu</string>
+
+    <string name="new_fault">New Issue</string>
+    <string name="active_faults">Active Issues</string>
+    <string name="pending_faults">Pending Issues</string>
+    <string name="fault_history">Issue History</string>
+    <string name="message_list">Message List</string>
+    <string name="report_fault">Report Issue</string>
+    <string name="fault_description">Issue Description</string>
+    <string name="fault_location">Issue Location</string>
+    <string name="fault_urgency">Issue Urgency</string>
+    <string name="attachment">Attachment (optional)</string>
+    <string name="fault_status">Status</string>
+    <string name="fault_open">Open</string>
+    <string name="fault_resolved">Resolved</string>
+    <string name="assigned_technician">Assigned Technician</string>
+
+    <string name="profile">Profile</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_role">Role</string>
+
+    <string name="admin_panel">Admin Panel</string>
+    <string name="manage_employees">Manage Employees</string>
+    <string name="manage_issues">Manage Issues</string>
+    <string name="add_employee">Add Employee</string>
+
+    <string name="manager_dashboard">Manager Dashboard</string>
+    <string name="manage_technicians">Manage Technicians</string>
+    <string name="avg_resolution_time">Avg Resolution Time</string>
+    <string name="resolved_faults">Resolved Issues</string>
+
+    <string name="technician_tasks_done">Completed Tasks</string>
+    <string name="technician_avg_time">Average Time</string>
+</resources>

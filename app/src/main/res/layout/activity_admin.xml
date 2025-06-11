@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Painel de Administração"
+        android:text="@string/admin_panel"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="#6D0075"
@@ -21,7 +21,7 @@
         android:id="@+id/btnManageEmployees"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gerenciar Funcionários"
+        android:text="@string/manage_employees"
         android:backgroundTint="#000000"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp" />
@@ -30,7 +30,7 @@
         android:id="@+id/btnManageIssues"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gerenciar Avarias"
+        android:text="@string/manage_issues"
         android:backgroundTint="#000000"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp" />

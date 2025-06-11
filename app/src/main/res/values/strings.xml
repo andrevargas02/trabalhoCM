@@ -1,56 +1,70 @@
 <resources>
-    <string name="app_name">trabalho</string>
+    <!-- App -->
+    <string name="app_name">Fixit</string>
+    <string name="fixit">FixIt</string>
+
+    <!-- Botões gerais -->
+    <string name="btn_back">Voltar</string>
+    <string name="btn_register">Registar</string>
+    <string name="btn_login">Iniciar sessão</string>
+    <string name="btn_attach">Anexar</string>
+    <string name="btn_send_fault">Enviar Avaria</string>
 
     <!-- Autenticação -->
+    <string name="register_button">Registar</string>
+    <string name="send_fault">Enviar Avaria</string>
     <string name="register_title">Registar Cliente</string>
     <string name="login_title">Iniciar Sessão</string>
-    <string name="name_hint">Introduza o seu nome</string>
-    <string name="phone_hint">Introduza o seu número de telefone</string>
-    <string name="email_hint">Introduza o seu endereço de email</string>
-    <string name="nif_hint">Introduza o seu NIF</string>
-    <string name="password_hint">Introduza a palavra-passe</string>
-    <string name="confirm_password_hint">Introduza novamente a palavra-passe</string>
-    <string name="register_button">Registar</string>
-    <string name="login_button">Iniciar sessão</string>
+    <string name="name_hint">Nome</string>
+    <string name="phone_hint">Telefone</string>
+    <string name="email_hint">Email</string>
+    <string name="nif_hint">NIF</string>
+    <string name="password_hint">Senha</string>
+    <string name="confirm_password_hint">Confirmar Senha</string>
     <string name="show_password">Mostrar palavra-passe</string>
     <string name="login_google">Continuar com Google</string>
     <string name="login_apple">Continuar com Apple</string>
     <string name="no_account">Ainda não tens conta? Regista-te!</string>
 
-    <!-- Navegação -->
+    <!-- Página Inicial -->
     <string name="home_title">Página principal</string>
+    <string name="welcome">Bem vindo/a</string>
+    <string name="welcome_named">Bem vindo/a\nAna Pereira</string>
+
+    <!-- Navegação -->
     <string name="notifications">Notificações</string>
     <string name="chats">Chats</string>
     <string name="logout">Sair</string>
     <string name="navigation_drawer_open">Abrir menu</string>
     <string name="navigation_drawer_close">Fechar menu</string>
 
-    <!-- Página Inicial -->
-    <string name="welcome">Bem vindo/a</string>
+    <!-- Avarias -->
     <string name="new_fault">Nova avaria</string>
     <string name="active_faults">Avarias Ativas</string>
+    <string name="pending_faults">Avarias Pendentes</string>
     <string name="fault_history">Histórico de avarias</string>
     <string name="message_list">Lista de mensagens</string>
-
-    <!-- Perfil -->
-    <string name="profile">Perfil</string>
-
-    <!-- Avarias -->
     <string name="report_fault">Apresentar avaria</string>
     <string name="fault_description">Descrição da avaria</string>
     <string name="fault_location">Localização da avaria</string>
     <string name="fault_urgency">Urgência da avaria</string>
-    <string name="attachment">Anexo (opcional)</string>
-    <string name="send_fault">Enviar Avaria</string>
+    <string name="attachment">Anexos (opcional)</string>
     <string name="fault_status">Estado</string>
-    <string name="fault_resolved">Solucionado</string>
     <string name="fault_open">Aberto</string>
+    <string name="fault_resolved">Solucionado</string>
     <string name="assigned_technician">Técnico Associado</string>
 
-    <!-- Localização -->
-    <string name="institution">Instituição</string>
-    <string name="location">Local</string>
-    <string name="additional_info">Informação Adicional (Sala, local)</string>
+    <!-- Perfil -->
+    <string name="profile">Perfil</string>
+    <string name="profile_name">Nome</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_role">Role</string>
+
+    <!-- Administrativo -->
+    <string name="admin_panel">Painel de Administração</string>
+    <string name="manage_employees">Gerenciar Funcionários</string>
+    <string name="manage_issues">Gerenciar Avarias</string>
+    <string name="add_employee">Adicionar Funcionário</string>
 
     <!-- Gestor -->
     <string name="manager_dashboard">Gestor Dashboard</string>

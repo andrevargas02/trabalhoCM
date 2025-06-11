@@ -47,7 +47,7 @@
         android:id="@+id/txtTitleActiveIssues"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Avarias Ativas"
+        android:text="@string/active_faults"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="8dp"

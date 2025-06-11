@@ -12,7 +12,7 @@
         android:id="@+id/btnAddEmployee"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Adicionar Funcionário"
+        android:text="@string/add_employee"
         android:backgroundTint="#000000"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp"/>

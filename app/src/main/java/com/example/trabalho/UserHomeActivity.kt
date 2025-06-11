@@ -77,7 +77,7 @@ class UserHomeActivity : AppCompatActivity() {
             startActivity(Intent(this, WorkerIssueHistoryActivity::class.java))
         }
         findViewById<View>(R.id.btnMessages).setOnClickListener {
-            // TODO: abrir MessagesActivity
+            startActivity(Intent(this, ChatListActivity::class.java))
         }
 
         // Saudação
