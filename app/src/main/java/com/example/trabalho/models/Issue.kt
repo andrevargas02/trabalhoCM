@@ -6,8 +6,9 @@ data class Issue(
     val urgency: String = "",
     val status: String = "",
     val image_path: String = "",
-    val createdAt: String = "",
-    val createdBy: String = "",
+    val createdAt: Long = 0,
+    val resolvedAt: Long = 0,
+    val createdBy: String = "" ,
     val technicianId: String = "",
     val location_id: String = ""
 ) : Serializable

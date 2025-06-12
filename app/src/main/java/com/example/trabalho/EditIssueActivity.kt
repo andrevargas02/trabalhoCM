@@ -1,13 +1,12 @@
 package com.example.trabalho
 
-
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.trabalho.models.Issue
-import com.example.trabalho.models.StatusUpdate
 import com.example.trabalho.models.Notification
+import com.example.trabalho.models.StatusUpdate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -22,26 +21,19 @@ class EditIssueActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_issue)
 
-        // Receber dados
         issueId = intent.getStringExtra("docId")!!
         issue = intent.getSerializableExtra("issue") as Issue
 
-        // Preencher campos
         findViewById<EditText>(R.id.inputDescription).setText(issue.description)
         findViewById<EditText>(R.id.inputLocation).setText(issue.location_id)
 
         val spinner = findViewById<Spinner>(R.id.spinnerUrgency)
-        spinner.adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            listOf("Baixa", "Média", "Alta")
-        )
-        spinner.setSelection(listOf("Baixa", "Média", "Alta").indexOf(issue.urgency))
+        val urgencies = listOf("Baixa", "Média", "Alta")
+        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, urgencies)
+        spinner.setSelection(urgencies.indexOf(issue.urgency))
 
-        // Ocultar botão de imagem
         findViewById<Button>(R.id.btnAttach).visibility = Button.GONE
 
-        // Submeter alterações
         val btnSubmit = findViewById<Button>(R.id.btnSubmitIssue)
         btnSubmit.text = "Atualizar Avaria"
         btnSubmit.setOnClickListener {
@@ -69,7 +61,6 @@ class EditIssueActivity : AppCompatActivity() {
         val technicianNames = mutableListOf<String>()
         val technicianIds = mutableListOf<String>()
 
-        // Carregar técnicos do Firestore
         db.collection("users")
             .whereEqualTo("role", "trabalhador")
             .get()
@@ -92,15 +83,22 @@ class EditIssueActivity : AppCompatActivity() {
                     .setPositiveButton("Salvar") { _, _ ->
                         val newStatus = statusSpinner.selectedItem.toString()
                         val technicianID = technicianIds[techSpinner.selectedItemPosition]
-                        val finalIssue = updatedIssue.copy(
-                            status = newStatus,
-                            technicianId = technicianID,
-                            createdBy = issue.createdBy
+
+                        val updateData = mutableMapOf<String, Any>(
+                            "description" to updatedIssue.description,
+                            "urgency" to updatedIssue.urgency,
+                            "location_id" to updatedIssue.location_id,
+                            "status" to newStatus,
+                            "technicianId" to technicianID,
+                            "createdBy" to issue.createdBy
                         )
 
-                        db.collection("issues").document(issueId).set(finalIssue)
+                        if (newStatus == "resolvida") {
+                            updateData["resolvedAt"] = System.currentTimeMillis()
+                        }
+
+                        db.collection("issues").document(issueId).update(updateData as Map<String, Any>)
                             .addOnSuccessListener {
-                                // 🔁 Guardar StatusUpdate
                                 val statusUpdate = StatusUpdate(
                                     statusID = db.collection("status_updates").document().id,
                                     status = newStatus,
@@ -112,7 +110,6 @@ class EditIssueActivity : AppCompatActivity() {
                                     .document(statusUpdate.statusID)
                                     .set(statusUpdate)
 
-                                // 🔔 Guardar Notification
                                 val notification = Notification(
                                     notificationID = db.collection("notifications").document().id,
                                     message = "O estado da sua avaria foi atualizado para \"$newStatus\".",

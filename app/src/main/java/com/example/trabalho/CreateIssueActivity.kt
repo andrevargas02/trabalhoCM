@@ -121,7 +121,7 @@ class CreateIssueActivity : AppCompatActivity() {
             urgency = urg,
             status = "ativa",
             image_path = imgPath,
-            createdAt = Timestamp.now().toDate().toString(),
+            createdAt = System.currentTimeMillis(),
             createdBy = uid,
             technicianId = "",
             location_id = loc

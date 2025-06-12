@@ -6,6 +6,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.concurrent.TimeUnit
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class ProfileActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
 
         val userId = auth.currentUser?.uid ?: return
+
         db.collection("users").document(userId).get().addOnSuccessListener { doc ->
             val name = doc.getString("name").orEmpty()
             val email = doc.getString("email").orEmpty()
@@ -35,11 +37,41 @@ class ProfileActivity : AppCompatActivity() {
             txtName.text = name
             txtEmail.text = email
 
-            if (role == "technician") {
+            if (role == "trabalhador") {
                 technicianStats.visibility = View.VISIBLE
-                txtRating.text = "4.5 ★★★★★" // estático, ou você pode calcular
-                txtTasksCompleted.text = "Tarefas Concluídas\n${doc.getLong("issuesResolved") ?: 0}"
-                txtAverageTime.text = "Tempo Médio\n${doc.getString("avgTime") ?: "25 min"}"
+                txtRating.text = "4.5 ★★★★★"
+
+                // Carregar avarias resolvidas pelo técnico
+                db.collection("issues")
+                    .whereEqualTo("technicianId", userId)
+                    .whereEqualTo("status", "resolvida")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        val total = result.size()
+                        var totalDuration = 0L
+                        var countWithTime = 0
+
+                        for (doc in result) {
+                            val createdAt = doc.getLong("createdAt")
+                            val resolvedAt = doc.getLong("resolvedAt")
+                            if (createdAt != null && resolvedAt != null && resolvedAt > createdAt) {
+                                totalDuration += (resolvedAt - createdAt)
+                                countWithTime++
+                            }
+                        }
+
+                        val avgTimeMinutes = if (countWithTime > 0)
+                            TimeUnit.MILLISECONDS.toMinutes(totalDuration / countWithTime)
+                        else
+                            0
+
+                        txtTasksCompleted.text = "Tarefas Concluídas\n$total"
+                        txtAverageTime.text = "Tempo Médio\n${avgTimeMinutes} min"
+                    }
+                    .addOnFailureListener {
+                        txtTasksCompleted.text = "Tarefas Concluídas\nErro"
+                        txtAverageTime.text = "Tempo Médio\nErro"
+                    }
             } else {
                 technicianStats.visibility = View.GONE
             }
