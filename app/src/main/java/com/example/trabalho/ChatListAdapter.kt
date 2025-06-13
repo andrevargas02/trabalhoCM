@@ -6,8 +6,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+data class ChatItem(
+    val chatId: String,
+    val otherUid: String,
+    val lastMessage: String
+)
+
 class ChatListAdapter(
-    private val items: List<Chat>,
+    private val items: List<ChatItem>,
     private val onClick: (chatId: String, otherUid: String) -> Unit
 ) : RecyclerView.Adapter<ChatListAdapter.VH>() {
 
@@ -16,16 +22,18 @@ class ChatListAdapter(
         val last = view.findViewById<TextView>(R.id.txtLastMessage)
     }
 
-    override fun onCreateViewHolder(p: ViewGroup, i: Int): VH {
-        val v = LayoutInflater.from(p.context).inflate(R.layout.item_chat, p, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_chat, parent, false)
         return VH(v)
     }
 
-    override fun onBindViewHolder(h: VH, pos: Int) {
-        val c = items[pos]
-        h.name.text = c.otherName
-        h.last.text = c.lastMessage
-        h.itemView.setOnClickListener { onClick(c.id, /* otherUid unknown here */ "") }
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val c = items[position]
+        holder.name.text = "Chat com ${c.otherUid}"
+        holder.last.text = c.lastMessage
+        holder.itemView.setOnClickListener { onClick(c.chatId, c.otherUid) }
     }
+
     override fun getItemCount() = items.size
 }

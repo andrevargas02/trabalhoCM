@@ -9,7 +9,8 @@
         android:id="@+id/txtChatWith"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Usuário X" />
+        android:text="Utilizador X"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/txtLastMessage"

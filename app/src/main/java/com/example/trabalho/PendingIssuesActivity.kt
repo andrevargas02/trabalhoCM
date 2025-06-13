@@ -1,6 +1,8 @@
 package com.example.trabalho
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,16 +23,24 @@ class PendingIssuesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pending_issues)
 
-        // 1) Configura RecyclerView + Adapter
+        // 1) Back button → volta para WorkerHomeActivity
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            val intent = Intent(this, WorkerHomeActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            startActivity(intent)
+            finish()
+        }
+
+        // 2) Configura RecyclerView + Adapter
         recyclerView = findViewById(R.id.recyclerViewPendingIssues)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
         adapter = PendingIssueAdapter(pendingList) { docId, _ ->
             acceptIssue(docId)
         }
         recyclerView.adapter = adapter
 
-        // 2) Carrega as avarias pendentes (technicianId == "")
+        // 3) Carrega avarias pendentes
         loadPendingIssues()
     }
 
@@ -42,7 +52,7 @@ class PendingIssuesActivity : AppCompatActivity() {
                 pendingList.clear()
                 for (doc in result) {
                     val issue = doc.toObject(Issue::class.java)
-                    pendingList.add(Pair(doc.id, issue))
+                    pendingList.add(doc.id to issue)
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -60,7 +70,6 @@ class PendingIssuesActivity : AppCompatActivity() {
             Toast.makeText(this, "Usuário não logado", Toast.LENGTH_SHORT).show()
             return
         }
-
         db.collection("issues").document(docId)
             .update(
                 mapOf(
@@ -73,7 +82,11 @@ class PendingIssuesActivity : AppCompatActivity() {
                 loadPendingIssues()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Falha ao aceitar avaria: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Falha ao aceitar avaria: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
     }
 }
