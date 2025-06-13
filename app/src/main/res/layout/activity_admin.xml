@@ -1,38 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="#FFFFFF">
+    android:fitsSystemWindows="true">
 
-    <TextView
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
+
+        <!-- Menu Icon -->
+        <ImageView
+            android:id="@+id/imgMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu"
+            android:contentDescription="Menu"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/admin_panel"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#6D0075"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/btnManageEmployees"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_employees"
+            android:backgroundTint="#000000"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnManageIssues"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_issues"
+            android:backgroundTint="#000000"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/admin_panel"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#6D0075"
-        android:layout_marginBottom="24dp" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/drawer_header" />
 
-    <Button
-        android:id="@+id/btnManageEmployees"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/manage_employees"
-        android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
-
-    <Button
-        android:id="@+id/btnManageIssues"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/manage_issues"
-        android:backgroundTint="#000000"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
-
-</LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
