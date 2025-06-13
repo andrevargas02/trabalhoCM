@@ -1,7 +1,11 @@
 package com.example.trabalho
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,22 +20,30 @@ class NotificationsActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NotificationAdapter
+    private lateinit var txtEmpty: TextView
     private val notifications = mutableListOf<Notification>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
 
-        supportActionBar?.apply {
-            title = "Notificações"
-            setDisplayHomeAsUpEnabled(true)
-        }
-
+        txtEmpty = findViewById(R.id.txtEmpty)
         recyclerView = findViewById(R.id.recyclerNotifications)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = NotificationAdapter(notifications)
+        adapter = NotificationAdapter(notifications) { notification ->
+            deleteNotification(notification)
+        }
         recyclerView.adapter = adapter
 
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+        loadNotifications()
+    }
+
+    private fun loadNotifications() {
         val userId = auth.currentUser?.uid ?: return
 
         db.collection("notifications")
@@ -46,14 +58,23 @@ class NotificationsActivity : AppCompatActivity() {
                     }
                 }
                 adapter.notifyDataSetChanged()
+                txtEmpty.visibility = if (notifications.isEmpty()) View.VISIBLE else View.GONE
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Erro ao carregar notificações", Toast.LENGTH_SHORT).show()
             }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
+    private fun deleteNotification(notification: Notification) {
+        db.collection("notifications").document(notification.notificationID)
+            .delete()
+            .addOnSuccessListener {
+                notifications.remove(notification)
+                adapter.notifyDataSetChanged()
+                txtEmpty.visibility = if (notifications.isEmpty()) View.VISIBLE else View.GONE
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Erro ao eliminar notificação", Toast.LENGTH_SHORT).show()
+            }
     }
 }
