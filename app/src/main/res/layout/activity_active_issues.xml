@@ -38,8 +38,8 @@
             android:id="@+id/imgLogo"
             android:layout_width="72dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_fixit_logo"
-            android:contentDescription="FixIt logo"/>
+            android:contentDescription="FixIt logo"
+            android:src="@drawable/ic_fixit_logo" />
     </LinearLayout>
 
     <!-- Título da tela -->
