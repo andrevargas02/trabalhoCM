@@ -1,8 +1,10 @@
 package com.example.trabalho
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
-import android.widget.ImageView
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,56 +17,73 @@ class ChatActivity : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: MessageAdapter
-    private val list = mutableListOf<Message>()
-    private lateinit var chatId: String
+    private val msgs = mutableListOf<Message>()
 
-    override fun onCreate(s: Bundle?) {
-        super.onCreate(s)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        chatId = intent.getStringExtra("chatId")!!
+        // 1) Back button → volta para a lista de chats
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
 
+        // 2) Título do chat com email ou nome do outro utilizador
+        val otherUid = intent.getStringExtra("otherUid") ?: ""
+        // Podes buscar o nome via Firestore, aqui deixo UID:
+        findViewById<TextView>(R.id.txtChatTitle).text = "Chat com $otherUid"
+
+        // 3) Configura RecyclerView
         recycler = findViewById(R.id.recyclerViewMessages)
         recycler.layoutManager = LinearLayoutManager(this)
-        adapter = MessageAdapter(list)
+        adapter = MessageAdapter(msgs)
         recycler.adapter = adapter
 
-        findViewById<ImageView>(R.id.btnSend).setOnClickListener {
-            val input = findViewById<EditText>(R.id.inputMessage)
-            val txt = input.text.toString().trim()
-            if (txt.isEmpty()) return@setOnClickListener
+        // 4) ID do chat
+        val chatId = intent.getStringExtra("chatId") ?: return
 
-            val msg = mapOf(
+        // 5) Enviar mensagem
+        findViewById<ImageButton>(R.id.btnSend).setOnClickListener {
+            val input = findViewById<EditText>(R.id.inputMessage)
+            val text = input.text.toString().trim()
+            if (text.isEmpty()) return@setOnClickListener
+
+            // Mapa da mensagem
+            val m = mapOf(
                 "senderId" to auth.currentUser!!.uid,
-                "text" to txt,
+                "text" to text,
                 "timestamp" to Timestamp.now()
             )
+            // Adiciona na subcoleção
             db.collection("chats")
                 .document(chatId)
                 .collection("messages")
-                .add(msg)
+                .add(m)
+
+            // Atualiza último texto no documento de chat
             db.collection("chats")
                 .document(chatId)
-                .update("lastMessage", txt)
+                .update("lastMessage", text)
+
             input.setText("")
         }
 
-        // Ouvir em tempo real
+        // 6) Ouvir mensagens em tempo real
         db.collection("chats")
             .document(chatId)
             .collection("messages")
             .orderBy("timestamp")
             .addSnapshotListener { snap, _ ->
                 if (snap == null) return@addSnapshotListener
-                list.clear()
+                msgs.clear()
                 for (doc in snap.documents) {
-                    val m = doc.toObject(Message::class.java)
-                    if (m != null) list.add(m)
+                    doc.toObject(Message::class.java)?.let { msgs.add(it) }
                 }
                 adapter.notifyDataSetChanged()
-                recycler.scrollToPosition(list.size - 1)
+                recycler.scrollToPosition(msgs.size - 1)
             }
     }
 }
