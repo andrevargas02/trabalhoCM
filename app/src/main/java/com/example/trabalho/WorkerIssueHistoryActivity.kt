@@ -1,6 +1,7 @@
 package com.example.trabalho
 
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,11 +22,18 @@ class WorkerIssueHistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker_issue_history)
 
+        // 1) Back button
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
+
+        // 2) RecyclerView + Adapter
         recyclerView = findViewById(R.id.recyclerViewIssueHistory)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = IssueAdapter(issueHistoryList)
         recyclerView.adapter = adapter
 
+        // 3) Carrega histórico
         loadIssueHistory()
     }
 
@@ -36,7 +44,7 @@ class WorkerIssueHistoryActivity : AppCompatActivity() {
             return
         }
 
-        // Obter o papel (role) do utilizador
+        // Obter role
         db.collection("users").document(uid).get()
             .addOnSuccessListener { document ->
                 val role = document.getString("role") ?: "cliente"
@@ -48,8 +56,9 @@ class WorkerIssueHistoryActivity : AppCompatActivity() {
                     .addOnSuccessListener { result ->
                         issueHistoryList.clear()
                         for (doc in result) {
-                            val issue = doc.toObject(Issue::class.java)
-                            issueHistoryList.add(issue)
+                            doc.toObject(Issue::class.java)?.let {
+                                issueHistoryList.add(it)
+                            }
                         }
                         adapter.notifyDataSetChanged()
                         Toast.makeText(
@@ -65,7 +74,6 @@ class WorkerIssueHistoryActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Erro ao obter papel do utilizador", Toast.LENGTH_SHORT).show()
