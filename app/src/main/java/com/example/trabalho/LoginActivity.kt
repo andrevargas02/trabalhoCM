@@ -2,10 +2,7 @@ package com.example.trabalho
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -21,10 +18,15 @@ class LoginActivity : AppCompatActivity() {
 
         val emailField = findViewById<EditText>(R.id.inputEmail)
         val passwordField = findViewById<EditText>(R.id.inputPassword)
-        val loginButton = findViewById<Button>(R.id.btnLogin)
+
+        val loginFrame = findViewById<FrameLayout>(R.id.btnLogin)
+        val loginText = loginFrame.findViewById<TextView>(R.id.txtLabel)
+
+        loginText.text = getString(R.string.btn_login)
+
         val registerRedirect = findViewById<TextView>(R.id.txtGoToRegister)
 
-        loginButton.setOnClickListener {
+        loginFrame.setOnClickListener {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
 
@@ -37,8 +39,8 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show()
-                         startActivity(Intent(this, MainActivity::class.java))
-                         finish()
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
                     } else {
                         Toast.makeText(this, "Erro: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }

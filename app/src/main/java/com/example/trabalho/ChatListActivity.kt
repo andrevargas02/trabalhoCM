@@ -57,11 +57,20 @@ class ChatListActivity : AppCompatActivity() {
                 chats.clear()
                 for (doc in snap.documents) {
                     val parts = doc.get("participants") as List<String>
-                    val other = parts.first { it != uid }
+                    val otherUid = parts.first { it != uid }
                     val lastMsg = doc.getString("lastMessage").orEmpty()
-                    chats.add(ChatItem(doc.id, other, lastMsg))
+
+                    val chatItem = ChatItem(doc.id, otherUid, lastMsg)
+                    chats.add(chatItem)
+
+                    db.collection("users").document(otherUid)
+                        .get()
+                        .addOnSuccessListener { userDoc ->
+                            val name = userDoc.getString("name") ?: userDoc.getString("email") ?: otherUid
+                            chatItem.otherUserName = name
+                            adapter.notifyDataSetChanged()
+                        }
                 }
-                adapter.notifyDataSetChanged()
             }
     }
 

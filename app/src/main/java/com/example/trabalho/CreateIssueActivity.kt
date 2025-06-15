@@ -130,7 +130,7 @@ class CreateIssueActivity : AppCompatActivity() {
         db.collection("issues").add(issue)
             .addOnSuccessListener {
                 Toast.makeText(this, "Avaria submetida!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, IssueListActivity::class.java)
+                val intent = Intent(this, UserHomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()

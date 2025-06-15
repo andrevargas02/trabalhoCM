@@ -33,8 +33,14 @@ class ChatActivity : AppCompatActivity() {
 
         // 2) Título do chat com email ou nome do outro utilizador
         val otherUid = intent.getStringExtra("otherUid") ?: ""
-        // Podes buscar o nome via Firestore, aqui deixo UID:
-        findViewById<TextView>(R.id.txtChatTitle).text = "Chat com $otherUid"
+        val titleView = findViewById<TextView>(R.id.txtChatTitle)
+        db.collection("users").document(otherUid).get()
+            .addOnSuccessListener { doc ->
+                val name = doc.getString("name") ?: doc.getString("email") ?: otherUid
+                titleView.text = "Chat com $name"
+            }
+
+
 
         // 3) Configura RecyclerView
         recycler = findViewById(R.id.recyclerViewMessages)
