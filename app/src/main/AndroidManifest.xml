@@ -56,6 +56,9 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".UserHomeActivity" />
         <activity android:name=".NotificationsActivity"/>
+        <activity android:name=".WorkerIssueDetailActivity" />
+        <activity android:name=".ActiveIssuesActivity" />
+
     </application>
 
 </manifest>

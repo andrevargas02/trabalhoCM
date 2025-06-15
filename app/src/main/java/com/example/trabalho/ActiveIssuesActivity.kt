@@ -14,8 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ActiveIssuesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: IssueAdapter
-    private val activeIssuesList = mutableListOf<Issue>()
+    private lateinit var adapter: ManageIssueAdapter
+    private val activeIssuesList = mutableListOf<Pair<String, Issue>>()
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -23,22 +23,29 @@ class ActiveIssuesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_active_issues)
 
-        // 1) Botão de voltar → volta para a home do trabalhador
+        // 1) Botão de voltar → WorkerHome
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
-            val intent = Intent(this, WorkerHomeActivity::class.java).apply {
+            Intent(this, WorkerHomeActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }.also {
+                startActivity(it)
+                finish()
             }
-            startActivity(intent)
-            finish()
         }
 
-        // 2) Configura o RecyclerView
+        // 2) Recycler + Adapter (reutiliza ManageIssueAdapter do admin)
         recyclerView = findViewById(R.id.recyclerViewActiveIssues)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = IssueAdapter(activeIssuesList)
+        adapter = ManageIssueAdapter(activeIssuesList) { docId, issue ->
+            // abre EXACTAMENTE o EditIssueActivity (mesmo XML do admin)
+            Intent(this, EditIssueActivity::class.java).apply {
+                putExtra("docId", docId)
+                putExtra("issue", issue)
+            }.also { startActivity(it) }
+        }
         recyclerView.adapter = adapter
 
-        // 3) Obtém o utilizador atual
+        // 3) Só avarias do trabalhador
         val currentUser = auth.currentUser
         if (currentUser == null) {
             Toast.makeText(this, "Usuário não autenticado", Toast.LENGTH_SHORT).show()
@@ -46,63 +53,22 @@ class ActiveIssuesActivity : AppCompatActivity() {
             return
         }
 
-        // 4) Lê o papel (role) do utilizador e faz a query adequada
-        db.collection("users").document(currentUser.uid).get()
-            .addOnSuccessListener { doc ->
-                val role = doc.getString("role")
-                if (role == null) {
-                    Toast.makeText(
-                        this,
-                        "Erro ao obter o tipo de utilizador",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@addOnSuccessListener
+        // 4) Query: status = ativa|em progresso  && technicianId = currentUser.uid
+        val statuses = listOf("ativa", "em progresso")
+        db.collection("issues")
+            .whereIn("status", statuses)
+            .whereEqualTo("technicianId", currentUser.uid)
+            .get()
+            .addOnSuccessListener { result ->
+                activeIssuesList.clear()
+                for (doc in result) {
+                    val issue = doc.toObject(Issue::class.java)
+                    activeIssuesList.add(doc.id to issue)
                 }
-
-                val statuses = listOf("ativa", "em progresso")
-                val query = when (role) {
-                    "client" -> db.collection("issues")
-                        .whereIn("status", statuses)
-                        .whereEqualTo("createdBy", currentUser.uid)
-
-                    "trabalhador" -> db.collection("issues")
-                        .whereIn("status", statuses)
-                        .whereEqualTo("technicianId", currentUser.uid)
-
-                    else -> {
-                        Toast.makeText(
-                            this,
-                            "Permissão negada: papel desconhecido",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@addOnSuccessListener
-                    }
-                }
-
-                // 5) Executa a query e atualiza a lista
-                query.get()
-                    .addOnSuccessListener { result ->
-                        activeIssuesList.clear()
-                        for (docIssue in result) {
-                            val issue = docIssue.toObject(Issue::class.java)
-                            activeIssuesList.add(issue)
-                        }
-                        adapter.notifyDataSetChanged()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(
-                            this,
-                            "Erro ao buscar avarias: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                adapter.notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                Toast.makeText(
-                    this,
-                    "Erro ao carregar dados do utilizador",
-                    Toast.LENGTH_SHORT
-                ).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Erro ao buscar avarias: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

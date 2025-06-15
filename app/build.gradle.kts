@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")               // ← adiciona o kapt para o Glide
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -37,7 +38,6 @@ android {
 }
 
 dependencies {
-
     implementation("com.google.firebase:firebase-firestore-ktx:25.1.4")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -46,7 +46,11 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.auth)
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // Glide para carregar imagens na WorkerIssueDetailActivity
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
