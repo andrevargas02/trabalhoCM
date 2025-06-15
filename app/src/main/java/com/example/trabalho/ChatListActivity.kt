@@ -24,12 +24,10 @@ class ChatListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list)
 
-        // 1) Botão de voltar → termina esta Activity
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             finish()
         }
 
-        // 2) Configura RecyclerView + Adapter
         recycler = findViewById(R.id.recyclerViewChats)
         recycler.layoutManager = LinearLayoutManager(this)
         adapter = ChatListAdapter(chats) { chatId, otherUid ->
@@ -40,11 +38,9 @@ class ChatListActivity : AppCompatActivity() {
         }
         recycler.adapter = adapter
 
-        // 3) FAB para nova conversa
         findViewById<FloatingActionButton>(R.id.fabNewChat)
             .setOnClickListener { showNewChatDialog() }
 
-        // 4) Escuta em tempo real as conversas
         listenForChats()
     }
 

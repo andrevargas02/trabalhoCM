@@ -28,10 +28,8 @@ class CreateIssueActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_issue)
 
-        // back
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
 
-        // urgências no spinner
         val spinner = findViewById<Spinner>(R.id.spinnerUrgency)
         spinner.adapter = ArrayAdapter(
             this,
@@ -39,7 +37,6 @@ class CreateIssueActivity : AppCompatActivity() {
             listOf("Baixa", "Média", "Alta")
         )
 
-        // Anexar imagem
         findViewById<Button>(R.id.btnAttach).setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"
@@ -51,7 +48,6 @@ class CreateIssueActivity : AppCompatActivity() {
             showLocationDialog()
         }
 
-        // Submeter
         findViewById<Button>(R.id.btnSubmitIssue).setOnClickListener {
             val desc = findViewById<EditText>(R.id.inputDescription).text.toString()
             val loc = findViewById<EditText>(R.id.inputLocation).text.toString()

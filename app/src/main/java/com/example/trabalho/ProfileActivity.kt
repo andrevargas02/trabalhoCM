@@ -41,7 +41,6 @@ class ProfileActivity : AppCompatActivity() {
                 technicianStats.visibility = View.VISIBLE
                 txtRating.text = "4.5 ★★★★★"
 
-                // Carregar avarias resolvidas pelo técnico
                 db.collection("issues")
                     .whereEqualTo("technicianId", userId)
                     .whereEqualTo("status", "resolvida")

@@ -24,7 +24,6 @@ class WorkerIssueDetailActivity : AppCompatActivity() {
         val spinnerUrgency   = findViewById<Spinner>(R.id.spinnerUrgency)
         val btnSubmit        = findViewById<Button>(R.id.btnSubmitIssue)
 
-        // 1) configura o spinner
         val urgencies = listOf("Baixa", "Média", "Alta")
         spinnerUrgency.adapter = ArrayAdapter(
             this,
@@ -32,7 +31,6 @@ class WorkerIssueDetailActivity : AppCompatActivity() {
             urgencies
         )
 
-        // 2) lê o docId do Intent
         val docId = intent.getStringExtra("docId")
         if (docId.isNullOrBlank()) {
             Toast.makeText(this, "ID da avaria em falta", Toast.LENGTH_SHORT).show()
@@ -40,7 +38,6 @@ class WorkerIssueDetailActivity : AppCompatActivity() {
             return
         }
 
-        // 3) carrega os dados atuais (DocumentSnapshot)
         db.collection("issues").document(docId).get()
             .addOnSuccessListener { snap: DocumentSnapshot ->
                 val issue = snap.toObject(Issue::class.java)
@@ -59,7 +56,6 @@ class WorkerIssueDetailActivity : AppCompatActivity() {
                 finish()
             }
 
-        // 4) ao clicar em “Atualizar Avaria”, grava no Firestore
         btnSubmit.setOnClickListener {
             val newDesc = inputDescription.text.toString().trim()
             val newLoc  = inputLocation.text.toString().trim()

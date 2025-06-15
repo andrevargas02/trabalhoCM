@@ -23,7 +23,6 @@ class ActiveIssuesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_active_issues)
 
-        // 1) Botão de voltar → WorkerHome
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             Intent(this, WorkerHomeActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -33,11 +32,9 @@ class ActiveIssuesActivity : AppCompatActivity() {
             }
         }
 
-        // 2) Recycler + Adapter (reutiliza ManageIssueAdapter do admin)
         recyclerView = findViewById(R.id.recyclerViewActiveIssues)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = ManageIssueAdapter(activeIssuesList) { docId, issue ->
-            // abre EXACTAMENTE o EditIssueActivity (mesmo XML do admin)
             Intent(this, EditIssueActivity::class.java).apply {
                 putExtra("docId", docId)
                 putExtra("issue", issue)
@@ -45,7 +42,6 @@ class ActiveIssuesActivity : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
 
-        // 3) Só avarias do trabalhador
         val currentUser = auth.currentUser
         if (currentUser == null) {
             Toast.makeText(this, "Usuário não autenticado", Toast.LENGTH_SHORT).show()
@@ -53,7 +49,6 @@ class ActiveIssuesActivity : AppCompatActivity() {
             return
         }
 
-        // 4) Query: status = ativa|em progresso  && technicianId = currentUser.uid
         val statuses = listOf("ativa", "em progresso")
         db.collection("issues")
             .whereIn("status", statuses)

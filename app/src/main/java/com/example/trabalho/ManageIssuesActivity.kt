@@ -13,14 +13,13 @@ class ManageIssuesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ManageIssueAdapter
-    private val issues = mutableListOf<Pair<String, Issue>>() // ID + dados
+    private val issues = mutableListOf<Pair<String, Issue>>()
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_issues)
 
-        // 1) Back button → volta ao menu de Admin
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             val intent = Intent(this, AdminActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -29,7 +28,6 @@ class ManageIssuesActivity : AppCompatActivity() {
             finish()
         }
 
-        // 2) Configura RecyclerView e Adapter
         recyclerView = findViewById(R.id.recyclerViewIssues)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = ManageIssueAdapter(issues) { docId, issue ->
@@ -41,7 +39,6 @@ class ManageIssuesActivity : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
 
-        // 3) Carrega os dados
         loadIssues()
     }
 
@@ -55,9 +52,6 @@ class ManageIssuesActivity : AppCompatActivity() {
                     issues.add(doc.id to issue)
                 }
                 adapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener {
-                // opcional: Toast ou log
             }
     }
 }

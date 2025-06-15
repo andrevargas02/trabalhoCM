@@ -26,7 +26,6 @@ class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<Issue
         holder.status.text = issue.status
         holder.urgency.text = issue.urgency
         holder.location.text = issue.location_id
-        // TODO: OnClickListener for details
     }
 
     override fun getItemCount() = issues.size

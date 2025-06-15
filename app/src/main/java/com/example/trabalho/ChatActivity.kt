@@ -26,12 +26,10 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        // 1) Back button → volta para a lista de chats
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             finish()
         }
 
-        // 2) Título do chat com email ou nome do outro utilizador
         val otherUid = intent.getStringExtra("otherUid") ?: ""
         val titleView = findViewById<TextView>(R.id.txtChatTitle)
         db.collection("users").document(otherUid).get()
@@ -42,34 +40,28 @@ class ChatActivity : AppCompatActivity() {
 
 
 
-        // 3) Configura RecyclerView
         recycler = findViewById(R.id.recyclerViewMessages)
         recycler.layoutManager = LinearLayoutManager(this)
         adapter = MessageAdapter(msgs)
         recycler.adapter = adapter
 
-        // 4) ID do chat
         val chatId = intent.getStringExtra("chatId") ?: return
 
-        // 5) Enviar mensagem
         findViewById<ImageButton>(R.id.btnSend).setOnClickListener {
             val input = findViewById<EditText>(R.id.inputMessage)
             val text = input.text.toString().trim()
             if (text.isEmpty()) return@setOnClickListener
 
-            // Mapa da mensagem
             val m = mapOf(
                 "senderId" to auth.currentUser!!.uid,
                 "text" to text,
                 "timestamp" to Timestamp.now()
             )
-            // Adiciona na subcoleção
             db.collection("chats")
                 .document(chatId)
                 .collection("messages")
                 .add(m)
 
-            // Atualiza último texto no documento de chat
             db.collection("chats")
                 .document(chatId)
                 .update("lastMessage", text)
@@ -77,7 +69,6 @@ class ChatActivity : AppCompatActivity() {
             input.setText("")
         }
 
-        // 6) Ouvir mensagens em tempo real
         db.collection("chats")
             .document(chatId)
             .collection("messages")

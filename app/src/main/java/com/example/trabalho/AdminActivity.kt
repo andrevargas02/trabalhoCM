@@ -20,17 +20,14 @@ class AdminActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
 
-        // Referências à UI
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.navView)
         menuIcon = findViewById(R.id.imgMenu)
 
-        // Ação do menu
         menuIcon.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        // Menu lateral (NavigationView)
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {

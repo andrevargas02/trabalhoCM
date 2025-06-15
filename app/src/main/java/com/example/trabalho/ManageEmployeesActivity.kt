@@ -26,28 +26,23 @@ class ManageEmployeesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_employees)
 
-        // 1) Botão voltar
         btnBack = findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
             finish()
         }
 
-        // 2) Lista e botão de adicionar
         listView = findViewById(R.id.listEmployees)
         btnAddEmployee = findViewById(R.id.btnAddEmployee)
 
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, mutableListOf())
         listView.adapter = adapter
 
-        // 3) Carrega utilizadores
         loadUsers()
 
-        // 4) Clicar em item para alterar papel
         listView.setOnItemClickListener { _, _, position, _ ->
             showRoleChangeDialog(userList[position])
         }
 
-        // 5) Adicionar funcionário
         btnAddEmployee.setOnClickListener {
             startActivity(Intent(this, RegisterEmployeeActivity::class.java))
         }

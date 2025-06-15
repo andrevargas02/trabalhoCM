@@ -23,7 +23,6 @@ class PendingIssuesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pending_issues)
 
-        // 1) Back button → volta para WorkerHomeActivity
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             val intent = Intent(this, WorkerHomeActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -32,7 +31,6 @@ class PendingIssuesActivity : AppCompatActivity() {
             finish()
         }
 
-        // 2) Configura RecyclerView + Adapter
         recyclerView = findViewById(R.id.recyclerViewPendingIssues)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = PendingIssueAdapter(pendingList) { docId, _ ->
